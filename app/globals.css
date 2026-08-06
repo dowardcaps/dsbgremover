@@ -4,6 +4,7 @@
 
 html,
 body {
-  background-color: #111111;
-  color: #f5f5f5;
+  background-color: #f3f6fb;
+  color: #1f2937;
+  font-family: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
 }

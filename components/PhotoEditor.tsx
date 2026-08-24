@@ -29,8 +29,14 @@ export default function PhotoEditor() {
     <div className="mx-auto flex max-w-6xl flex-col gap-6 p-6 bg-white shadow-sm border border-[#d0dff0] rounded">
       <header className="border-b-2 border-guide pb-4">
         <h1 className="text-2xl font-bold uppercase tracking-wide text-ink">
-          Rush ID - BG <span className="text-guide">Remover</span>
+          Rush ID - Background <span className="text-guide">Remover</span>
         </h1>
+        <p className="text-sm text-slate-500">
+          Each tab below is a separate customer with its own independent progress - upload,
+          layers, crop, zoom, and rotate never mix between tabs. Click{" "}
+          <span className="text-guide font-semibold">+</span> to start a new customer. Progress is saved in
+          this browser automatically, so an accidental refresh won&apos;t lose your place.
+        </p>
       </header>
 
       <SessionTabBar

@@ -1,9 +1,10 @@
 "use client";
 
-import { RefObject } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import Cropper from "react-easy-crop";
 import { Area } from "react-easy-crop";
-import { HANDLE_RADIUS, LAYER_LABELS, LayerKey, Transform } from "@/lib/editorTypes";
+import { CANVAS_SIZE, HANDLE_RADIUS, LAYER_LABELS, LayerKey, NameCase, Transform } from "@/lib/editorTypes";
+import { NAME_BAND_HEIGHT, drawNameplate } from "@/lib/nameplate";
 
 interface EditorCanvasProps {
   canvasRef: RefObject<HTMLDivElement>;
@@ -35,6 +36,9 @@ interface EditorCanvasProps {
 
   isRotating: boolean;
   onRotateHandlePointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
+
+  name: string;
+  nameCase: NameCase;
 }
 
 export default function EditorCanvas({
@@ -61,7 +65,27 @@ export default function EditorCanvas({
   activeRotation,
   isRotating,
   onRotateHandlePointerDown,
+  name,
+  nameCase,
 }: EditorCanvasProps) {
+  const nameplateCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Preview band height, scaled down from the real 1080px export size to
+  // this component's 420px preview canvas - same ratio, so what you see
+  // here lines up with the downloaded PNG.
+  const previewBandHeight = Math.round((NAME_BAND_HEIGHT / 1080) * CANVAS_SIZE);
+
+  useEffect(() => {
+    const canvas = nameplateCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Same drawNameplate function used for the real export - just called
+    // at preview scale, so sizing/centering math is identical either way.
+    drawNameplate(ctx, 0, 0, canvas.width, canvas.height, name, nameCase);
+  }, [name, nameCase, previewBandHeight]);
+
   return (
     <div
       ref={canvasRef}
@@ -158,6 +182,19 @@ export default function EditorCanvas({
           />
         </div>
       )}
+
+      {/* Name plate - white band pinned to the bottom of the canvas,
+          rendered with the exact same drawing routine as the final export
+          so the preview always matches the download. Always present (per
+          spec the band stays blank rather than disappearing), sits above
+          the photo layers, non-interactive so it never blocks dragging. */}
+      <canvas
+        ref={nameplateCanvasRef}
+        width={CANVAS_SIZE}
+        height={previewBandHeight}
+        className="pointer-events-none absolute bottom-0 left-0 z-10"
+        style={{ width: CANVAS_SIZE, height: previewBandHeight }}
+      />
 
       {/* 50% center guides, matching the Photoshop manual workflow */}
       <div className="pointer-events-none absolute inset-0 z-10">

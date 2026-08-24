@@ -16,6 +16,8 @@ const SESSIONS_STORE = "sessions";
 const META_STORE = "meta";
 const ORDER_KEY = "sessionOrder";
 
+import { Gender } from "@/lib/attire";
+
 export interface StoredTransform {
   crop: { x: number; y: number };
   zoom: number;
@@ -49,6 +51,15 @@ export interface StoredSession {
   showBackgroundLayer: boolean;
   showGeminiLayer: boolean;
   geminiLayerOpacity: number;
+
+  name?: string;
+  nameCase?: "upper" | "natural";
+
+  // Referenced by the in-progress attire-change feature (not yet wired
+  // into the live editor tree) - kept optional so it doesn't affect any
+  // session saved before that feature exists.
+  attireGender?: Gender;
+  attireId?: string | null;
 
   updatedAt: number;
 }

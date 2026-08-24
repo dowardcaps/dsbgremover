@@ -1,3 +1,5 @@
+import { NameCase, NAME_BAND_HEIGHT, drawNameplate } from "@/lib/nameplate";
+
 export interface PixelCrop {
   x: number;
   y: number;
@@ -23,6 +25,8 @@ export interface EditOptions {
   backgroundColor?: string | null; // null/undefined = transparent
   brightness?: number; // percent, 100 = normal
   contrast?: number; // percent, 100 = normal
+  name?: string; // optional nameplate text, blank = no text drawn
+  nameCase?: NameCase; // "upper" (default) or "natural"
 }
 
 /**
@@ -42,7 +46,8 @@ export async function getCroppedPng(
   rotation: number = 0,
   options: EditOptions = {}
 ): Promise<Blob> {
-  const { backgroundColor = null, brightness = 100, contrast = 100 } = options;
+  const { backgroundColor = null, brightness = 100, contrast = 100, name = "", nameCase = "upper" } =
+    options;
   const image = await createImage(imageSrc);
   const filterString = `brightness(${brightness}%) contrast(${contrast}%)`;
 
@@ -98,6 +103,12 @@ export async function getCroppedPng(
     outputSize,
     outputSize
   );
+
+  // Optional name plate: a white band pinned to the bottom of the square,
+  // drawn last so it always sits on top of the photo. Always rendered
+  // (even blank) so the layout is consistent whether or not a name was
+  // entered - only the text itself is conditional.
+  drawNameplate(ctx, 0, outputSize - NAME_BAND_HEIGHT, outputSize, NAME_BAND_HEIGHT, name, nameCase);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {

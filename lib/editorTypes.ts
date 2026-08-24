@@ -1,6 +1,9 @@
 // Shared types and constants for the Rush ID photo editor. Kept separate
 // from components/hooks so both layers can import from one source of truth.
 
+export { NAME_BAND_HEIGHT, DEFAULT_NAME_CASE } from "@/lib/nameplate";
+export type { NameCase } from "@/lib/nameplate";
+
 export const BG_REMOVE_API_URL =
   process.env.NEXT_PUBLIC_BG_REMOVE_API_URL || "http://localhost:8000/remove-bg";
 

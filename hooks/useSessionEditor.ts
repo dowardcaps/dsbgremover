@@ -11,8 +11,10 @@ import {
 } from "@/lib/sessionStore";
 import {
   BG_REMOVE_API_URL,
+  DEFAULT_NAME_CASE,
   DEFAULT_TRANSFORM,
   LayerKey,
+  NameCase,
   OUTPUT_SIZE,
   Stage,
   Transform,
@@ -61,6 +63,11 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
   const [bgColor, setBgColor] = useState<string | null>(null); // null = transparent
   const [brightness, setBrightness] = useState(100); // percent, 100 = normal
   const [contrast, setContrast] = useState(100); // percent, 100 = normal
+
+  // Optional nameplate text shown in the white band at the bottom of the
+  // 1080x1080 canvas. Blank by default - the band stays blank, not hidden.
+  const [name, setName] = useState("");
+  const [nameCase, setNameCase] = useState<NameCase>(DEFAULT_NAME_CASE);
 
   // Layers panel - lets you toggle visibility & opacity to compare the
   // AI output against the original photo before trusting the result.
@@ -149,6 +156,10 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
         setShowBackgroundLayer(saved.showBackgroundLayer);
         setShowGeminiLayer(saved.showGeminiLayer);
         setGeminiLayerOpacity(saved.geminiLayerOpacity);
+        // Optional chaining: sessions saved before the name feature shipped
+        // won't have these fields, so fall back to blank/default.
+        setName(saved.name ?? "");
+        setNameCase(saved.nameCase ?? DEFAULT_NAME_CASE);
         // A photo mid-upload when the tab closed has no bg-removed result
         // to resume into, so send it back to the upload screen rather than
         // a stuck "removing" or stale "error" state.
@@ -189,6 +200,8 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
         showBackgroundLayer,
         showGeminiLayer,
         geminiLayerOpacity,
+        name,
+        nameCase,
         updatedAt: Date.now(),
       };
       saveSession(record);
@@ -216,6 +229,8 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
     showBackgroundLayer,
     showGeminiLayer,
     geminiLayerOpacity,
+    name,
+    nameCase,
   ]);
 
   const handleFileSelect = async (file: File) => {
@@ -257,6 +272,8 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
       setGeminiSrc(null);
       setShowGeminiLayer(true);
       setGeminiLayerOpacity(50);
+      setName("");
+      setNameCase(DEFAULT_NAME_CASE);
       setStage("editing");
     } catch (err) {
       console.error(err);
@@ -373,6 +390,8 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
           backgroundColor: bgColor,
           brightness,
           contrast,
+          name,
+          nameCase,
         }
       );
       const url = URL.createObjectURL(blob);
@@ -413,6 +432,8 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
     setGeminiFile(null);
     setShowGeminiLayer(true);
     setGeminiLayerOpacity(50);
+    setName("");
+    setNameCase(DEFAULT_NAME_CASE);
     setCroppedAreaPixels(null);
     setErrorMessage("");
     setStage("upload");
@@ -463,6 +484,12 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
     contrast,
     setContrast,
     resetBrightnessContrast,
+
+    // optional nameplate text
+    name,
+    setName,
+    nameCase,
+    setNameCase,
 
     // rotate-handle drag state
     isRotating,

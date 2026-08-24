@@ -79,6 +79,8 @@ export default function SessionEditor({ sessionId, onThumbnailChange }: SessionE
               activeRotation={editor.activeTransform.rotation}
               isRotating={editor.isRotating}
               onRotateHandlePointerDown={editor.handleRotateHandlePointerDown}
+              name={editor.name}
+              nameCase={editor.nameCase}
             />
 
             <p className="text-xs text-slate-400">
@@ -145,6 +147,10 @@ export default function SessionEditor({ sessionId, onThumbnailChange }: SessionE
               contrast={editor.contrast}
               setContrast={editor.setContrast}
               resetBrightnessContrast={editor.resetBrightnessContrast}
+              name={editor.name}
+              setName={editor.setName}
+              nameCase={editor.nameCase}
+              setNameCase={editor.setNameCase}
             />
           </div>
         </div>

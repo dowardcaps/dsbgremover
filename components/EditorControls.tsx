@@ -1,6 +1,6 @@
 "use client";
 
-import { LAYER_LABELS, LayerKey, Transform } from "@/lib/editorTypes";
+import { LAYER_LABELS, LayerKey, NameCase, Transform } from "@/lib/editorTypes";
 
 const BG_PRESETS = ["#ffffff", "#1e3a8a", "#dc2626", "#f5f5f4"];
 
@@ -19,6 +19,11 @@ interface EditorControlsProps {
   contrast: number;
   setContrast: (value: number) => void;
   resetBrightnessContrast: () => void;
+
+  name: string;
+  setName: (value: string) => void;
+  nameCase: NameCase;
+  setNameCase: (value: NameCase) => void;
 }
 
 export default function EditorControls({
@@ -34,6 +39,10 @@ export default function EditorControls({
   contrast,
   setContrast,
   resetBrightnessContrast,
+  name,
+  setName,
+  nameCase,
+  setNameCase,
 }: EditorControlsProps) {
   return (
     <>
@@ -167,6 +176,47 @@ export default function EditorControls({
             Reset brightness/contrast
           </button>
         )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
+          Name <span className="text-slate-400">(optional)</span>
+        </label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="e.g. Chrizel Jane Y. Dionisio"
+          className="border border-[#c7d9f0] bg-white px-3 py-2 text-sm text-ink placeholder:text-slate-400 focus:border-guide focus:outline-none"
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
+          Capitalization
+        </label>
+        <div className="flex items-center gap-4 text-sm text-ink">
+          <label className="flex cursor-pointer items-center gap-2">
+            <input
+              type="radio"
+              name="nameCase"
+              checked={nameCase === "upper"}
+              onChange={() => setNameCase("upper")}
+              className="accent-guide"
+            />
+            ALL CAPS
+          </label>
+          <label className="flex cursor-pointer items-center gap-2">
+            <input
+              type="radio"
+              name="nameCase"
+              checked={nameCase === "natural"}
+              onChange={() => setNameCase("natural")}
+              className="accent-guide"
+            />
+            Natural Case
+          </label>
+        </div>
       </div>
     </>
   );

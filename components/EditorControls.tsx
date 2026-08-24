@@ -24,6 +24,8 @@ interface EditorControlsProps {
   setName: (value: string) => void;
   nameCase: NameCase;
   setNameCase: (value: NameCase) => void;
+  showNameplate: boolean;
+  setShowNameplate: (value: boolean) => void;
 }
 
 export default function EditorControls({
@@ -43,6 +45,8 @@ export default function EditorControls({
   setName,
   nameCase,
   setNameCase,
+  showNameplate,
+  setShowNameplate,
 }: EditorControlsProps) {
   return (
     <>
@@ -179,19 +183,31 @@ export default function EditorControls({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
-          Name <span className="text-slate-400">(optional)</span>
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
+            Name <span className="text-slate-400">(optional)</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 text-xs text-ink">
+            <input
+              type="checkbox"
+              checked={showNameplate}
+              onChange={(e) => setShowNameplate(e.target.checked)}
+              className="accent-guide"
+            />
+            Show white rectangle
+          </label>
+        </div>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Chrizel Jane Y. Dionisio"
-          className="border border-[#c7d9f0] bg-white px-3 py-2 text-sm text-ink placeholder:text-slate-400 focus:border-guide focus:outline-none"
+          disabled={!showNameplate}
+          className="border border-[#c7d9f0] bg-white px-3 py-2 text-sm text-ink placeholder:text-slate-400 focus:border-guide focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         />
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className={`flex flex-col gap-2 ${!showNameplate ? "opacity-50" : ""}`}>
         <label className="text-xs font-bold uppercase tracking-wide text-slate-600">
           Capitalization
         </label>
@@ -202,6 +218,7 @@ export default function EditorControls({
               name="nameCase"
               checked={nameCase === "upper"}
               onChange={() => setNameCase("upper")}
+              disabled={!showNameplate}
               className="accent-guide"
             />
             ALL CAPS
@@ -212,6 +229,7 @@ export default function EditorControls({
               name="nameCase"
               checked={nameCase === "natural"}
               onChange={() => setNameCase("natural")}
+              disabled={!showNameplate}
               className="accent-guide"
             />
             Natural Case

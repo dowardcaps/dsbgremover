@@ -39,6 +39,7 @@ interface EditorCanvasProps {
 
   name: string;
   nameCase: NameCase;
+  showNameplate: boolean;
 }
 
 export default function EditorCanvas({
@@ -67,6 +68,7 @@ export default function EditorCanvas({
   onRotateHandlePointerDown,
   name,
   nameCase,
+  showNameplate,
 }: EditorCanvasProps) {
   const nameplateCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -81,15 +83,16 @@ export default function EditorCanvas({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!showNameplate) return;
     // Same drawNameplate function used for the real export - just called
     // at preview scale, so sizing/centering math is identical either way.
     drawNameplate(ctx, 0, 0, canvas.width, canvas.height, name, nameCase);
-  }, [name, nameCase, previewBandHeight]);
+  }, [name, nameCase, previewBandHeight, showNameplate]);
 
   return (
     <div
       ref={canvasRef}
-      className="relative mx-auto h-[420px] w-[420px] overflow-visible"
+      className="relative mx-auto h-[420px] w-[420px] overflow-visible border-2 border-guide"
       style={{
         backgroundImage:
           "linear-gradient(45deg, #333 25%, transparent 25%), linear-gradient(-45deg, #333 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #333 75%), linear-gradient(-45deg, transparent 75%, #333 75%)",

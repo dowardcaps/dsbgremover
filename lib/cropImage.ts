@@ -27,6 +27,7 @@ export interface EditOptions {
   contrast?: number; // percent, 100 = normal
   name?: string; // optional nameplate text, blank = no text drawn
   nameCase?: NameCase; // "upper" (default) or "natural"
+  showNameplate?: boolean; // false = skip the white band entirely, default true
 }
 
 /**
@@ -46,8 +47,14 @@ export async function getCroppedPng(
   rotation: number = 0,
   options: EditOptions = {}
 ): Promise<Blob> {
-  const { backgroundColor = null, brightness = 100, contrast = 100, name = "", nameCase = "upper" } =
-    options;
+  const {
+    backgroundColor = null,
+    brightness = 100,
+    contrast = 100,
+    name = "",
+    nameCase = "upper",
+    showNameplate = true,
+  } = options;
   const image = await createImage(imageSrc);
   const filterString = `brightness(${brightness}%) contrast(${contrast}%)`;
 
@@ -107,8 +114,11 @@ export async function getCroppedPng(
   // Optional name plate: a white band pinned to the bottom of the square,
   // drawn last so it always sits on top of the photo. Always rendered
   // (even blank) so the layout is consistent whether or not a name was
-  // entered - only the text itself is conditional.
-  drawNameplate(ctx, 0, outputSize - NAME_BAND_HEIGHT, outputSize, NAME_BAND_HEIGHT, name, nameCase);
+  // entered - only the text itself is conditional. The whole band is
+  // skipped when the user has hidden it.
+  if (showNameplate) {
+    drawNameplate(ctx, 0, outputSize - NAME_BAND_HEIGHT, outputSize, NAME_BAND_HEIGHT, name, nameCase);
+  }
 
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {

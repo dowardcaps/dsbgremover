@@ -68,6 +68,7 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
   // 1080x1080 canvas. Blank by default - the band stays blank, not hidden.
   const [name, setName] = useState("");
   const [nameCase, setNameCase] = useState<NameCase>(DEFAULT_NAME_CASE);
+  const [showNameplate, setShowNameplate] = useState(true);
 
   // Layers panel - lets you toggle visibility & opacity to compare the
   // AI output against the original photo before trusting the result.
@@ -160,6 +161,7 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
         // won't have these fields, so fall back to blank/default.
         setName(saved.name ?? "");
         setNameCase(saved.nameCase ?? DEFAULT_NAME_CASE);
+        setShowNameplate(saved.showNameplate ?? true);
         // A photo mid-upload when the tab closed has no bg-removed result
         // to resume into, so send it back to the upload screen rather than
         // a stuck "removing" or stale "error" state.
@@ -202,6 +204,7 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
         geminiLayerOpacity,
         name,
         nameCase,
+        showNameplate,
         updatedAt: Date.now(),
       };
       saveSession(record);
@@ -231,6 +234,7 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
     geminiLayerOpacity,
     name,
     nameCase,
+    showNameplate,
   ]);
 
   const handleFileSelect = async (file: File) => {
@@ -274,6 +278,7 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
       setGeminiLayerOpacity(50);
       setName("");
       setNameCase(DEFAULT_NAME_CASE);
+      setShowNameplate(true);
       setStage("editing");
     } catch (err) {
       console.error(err);
@@ -392,6 +397,7 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
           contrast,
           name,
           nameCase,
+          showNameplate,
         }
       );
       const url = URL.createObjectURL(blob);
@@ -434,6 +440,7 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
     setGeminiLayerOpacity(50);
     setName("");
     setNameCase(DEFAULT_NAME_CASE);
+    setShowNameplate(true);
     setCroppedAreaPixels(null);
     setErrorMessage("");
     setStage("upload");
@@ -490,6 +497,8 @@ export function useSessionEditor({ sessionId, onThumbnailChange }: UseSessionEdi
     setName,
     nameCase,
     setNameCase,
+    showNameplate,
+    setShowNameplate,
 
     // rotate-handle drag state
     isRotating,

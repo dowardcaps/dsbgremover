@@ -81,6 +81,7 @@ export default function SessionEditor({ sessionId, onThumbnailChange }: SessionE
               onRotateHandlePointerDown={editor.handleRotateHandlePointerDown}
               name={editor.name}
               nameCase={editor.nameCase}
+              showNameplate={editor.showNameplate}
             />
 
             <p className="text-xs text-slate-400">
@@ -151,6 +152,8 @@ export default function SessionEditor({ sessionId, onThumbnailChange }: SessionE
               setName={editor.setName}
               nameCase={editor.nameCase}
               setNameCase={editor.setNameCase}
+              showNameplate={editor.showNameplate}
+              setShowNameplate={editor.setShowNameplate}
             />
           </div>
         </div>

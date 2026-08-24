@@ -54,6 +54,7 @@ export interface StoredSession {
 
   name?: string;
   nameCase?: "upper" | "natural";
+  showNameplate?: boolean;
 
   // Referenced by the in-progress attire-change feature (not yet wired
   // into the live editor tree) - kept optional so it doesn't affect any
